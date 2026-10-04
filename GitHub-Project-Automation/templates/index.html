@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>GitAuto</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a,
+                    #111827
+                );
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        .container {
+
+            width: 100%;
+
+            max-width: 800px;
+
+            background:
+                rgba(30, 41, 59, 0.95);
+
+            border:
+                1px solid #334155;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+
+            text-align: center;
+
+            font-size: 42px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            margin-bottom: 30px;
+        }
+
+        .status {
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: #334155;
+
+            margin-bottom: 25px;
+
+            text-align: center;
+        }
+
+        .connected {
+
+            background:
+                rgba(34, 197, 94, 0.12);
+
+            border:
+                1px solid #22c55e;
+
+            color: #86efac;
+        }
+
+        .dot {
+
+            display: inline-block;
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #ef4444;
+
+            margin-right: 7px;
+        }
+
+        .connected .dot {
+
+            background: #22c55e;
+        }
+
+        .github-button {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 13px;
+
+            background: #24292f;
+
+            color: white;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            margin-bottom: 12px;
+
+            border:
+                1px solid #475569;
+        }
+
+        .github-button:hover {
+
+            background: #334155;
+        }
+
+        .form-group {
+
+            margin-bottom: 22px;
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+
+            width: 100%;
+
+            padding: 13px;
+
+            background: #0f172a;
+
+            color: white;
+
+            border:
+                1px solid #475569;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        textarea:focus {
+
+            border-color: #3b82f6;
+        }
+
+        textarea {
+
+            resize: vertical;
+
+            min-height: 100px;
+        }
+
+        .folder-box {
+
+            border:
+                2px dashed #475569;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            background: #0f172a;
+        }
+
+        .folder-box:hover {
+
+            border-color: #3b82f6;
+        }
+
+        #project {
+
+            cursor: pointer;
+        }
+
+        .file-info {
+
+            margin-top: 15px;
+
+            color: #94a3b8;
+
+            line-height: 1.6;
+        }
+
+        .progress-container {
+
+            display: none;
+
+            margin-top: 25px;
+        }
+
+        .progress-text {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+        }
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 12px;
+
+            background: #0f172a;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+
+            height: 100%;
+
+            width: 0%;
+
+            background: #2563eb;
+
+            transition:
+                width 0.2s ease;
+        }
+
+        .publish-button {
+
+            width: 100%;
+
+            border: none;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+        .publish-button:hover {
+
+            background: #1d4ed8;
+        }
+
+        .publish-button:disabled {
+
+            background: #475569;
+
+            cursor: not-allowed;
+        }
+
+        .message {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            line-height: 1.6;
+        }
+
+        .success-message {
+
+            background:
+                rgba(34, 197, 94, 0.12);
+
+            border:
+                1px solid #22c55e;
+
+            color: #86efac;
+        }
+
+        .error-message {
+
+            background:
+                rgba(239, 68, 68, 0.12);
+
+            border:
+                1px solid #ef4444;
+
+            color: #fca5a5;
+        }
+
+        .small {
+
+            font-size: 13px;
+
+            color: #64748b;
+
+            margin-top: 15px;
+
+            line-height: 1.6;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="logo">
+        🚀 GitAuto
+    </div>
+
+
+    <div class="subtitle">
+        GitHub Project Automation Tool
+    </div>
+
+
+    <!-- =====================================================
+         GITHUB CONNECTION
+         ===================================================== -->
+
+    {% if github_user %}
+
+        <div class="status connected">
+
+            <span class="dot"></span>
+
+            GitHub connected:
+
+            <strong>
+                {{ github_user.login }}
+            </strong>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="github-button"
+        >
+            🔄 Switch GitHub Account
+        </a>
+
+    {% else %}
+
+        <a
+            href="{{ url_for('github_login') }}"
+            class="github-button"
+        >
+            🐙 Connect GitHub
+        </a>
+
+
+        <div class="status">
+
+            <span class="dot"></span>
+
+            GitHub account not connected
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         PROJECT FORM
+         ===================================================== -->
+
+    <form
+        id="project-form"
+    >
+
+
+        <!-- REPOSITORY NAME -->
+
+        <div class="form-group">
+
+            <label for="repo_name">
+                Repository Name
+            </label>
+
+            <input
+                type="text"
+                id="repo_name"
+                name="repo_name"
+                placeholder="my-awesome-project"
+                required
+            >
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group">
+
+            <label for="description">
+                Repository Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe your project..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- PROJECT FOLDER -->
+
+        <div class="form-group">
+
+            <label>
+                Select Project Folder
+            </label>
+
+
+            <div class="folder-box">
+
+                <input
+                    type="file"
+                    id="project"
+                    name="project_files"
+                    webkitdirectory
+                    directory
+                    multiple
+                >
+
+
+                <div
+                    id="file-info"
+                    class="file-info"
+                >
+                    No folder selected.
+                </div>
+
+            </div>
+
+
+            <div class="small">
+
+                GitAuto automatically ignores
+                <strong>
+                    venv, .git, node_modules,
+                    __pycache__, .vscode,
+                    dist and build
+                </strong>
+                folders.
+
+                Maximum project size:
+                <strong>2 GB</strong>.
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROGRESS
+             ================================================= -->
+
+        <div
+            id="progress-container"
+            class="progress-container"
+        >
+
+            <div class="progress-text">
+
+                <span id="progress-status">
+                    Preparing...
+                </span>
+
+                <span id="progress-percent">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    id="progress-fill"
+                    class="progress-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BUTTON
+             ================================================= -->
+
+        <button
+            type="submit"
+            id="publish-btn"
+            class="publish-button"
+            {% if not github_user %}disabled{% endif %}
+        >
+
+            🚀 Create Repository & Publish Project
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =====================================================
+         MESSAGE
+         ===================================================== -->
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+</div>
+
+
+<script>
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const projectInput =
+    document.getElementById(
+        "project"
+    );
+
+
+const fileInfo =
+    document.getElementById(
+        "file-info"
+    );
+
+
+const form =
+    document.getElementById(
+        "project-form"
+    );
+
+
+const publishButton =
+    document.getElementById(
+        "publish-btn"
+    );
+
+
+const progressContainer =
+    document.getElementById(
+        "progress-container"
+    );
+
+
+const progressStatus =
+    document.getElementById(
+        "progress-status"
+    );
+
+
+const progressPercent =
+    document.getElementById(
+        "progress-percent"
+    );
+
+
+const progressFill =
+    document.getElementById(
+        "progress-fill"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+// Each HTTP request will contain approximately
+// 20 MB of files.
+
+const BATCH_SIZE =
+    20 * 1024 * 1024;
+
+
+// ============================================================
+// IGNORED FOLDERS
+// ============================================================
+
+const IGNORED_FOLDERS = new Set([
+
+    "venv",
+    ".venv",
+    "env",
+    ".env",
+
+    ".git",
+    ".idea",
+    ".vscode",
+
+    "__pycache__",
+
+    "node_modules",
+
+    "dist",
+    "build",
+
+    ".pytest_cache",
+    ".mypy_cache",
+
+    ".next",
+    ".nuxt",
+
+    "coverage"
+
+]);
+
+
+// ============================================================
+// IGNORED FILES
+// ============================================================
+
+const IGNORED_FILES = new Set([
+
+    ".env",
+    ".DS_Store",
+    "Thumbs.db",
+    "desktop.ini"
+
+]);
+
+
+// ============================================================
+// CHECK IF FILE SHOULD BE IGNORED
+// ============================================================
+
+function shouldIgnoreFile(file) {
+
+    const relativePath =
+        file.webkitRelativePath ||
+        file.name;
+
+
+    const parts =
+        relativePath.split("/");
+
+
+    const filename =
+        parts[parts.length - 1];
+
+
+    for (
+        const part of parts
+    ) {
+
+        if (
+            IGNORED_FOLDERS.has(part)
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    if (
+        IGNORED_FILES.has(filename)
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+// ============================================================
+// FORMAT SIZE
+// ============================================================
+
+function formatSize(bytes) {
+
+    if (
+        bytes < 1024
+    ) {
+
+        return bytes + " B";
+
+    }
+
+
+    if (
+        bytes < 1024 * 1024
+    ) {
+
+        return (
+            (bytes / 1024).toFixed(1)
+            + " KB"
+        );
+
+    }
+
+
+    if (
+        bytes < 1024 * 1024 * 1024
+    ) {
+
+        return (
+            (bytes / (1024 * 1024)).toFixed(1)
+            + " MB"
+        );
+
+    }
+
+
+    return (
+        (bytes / (1024 * 1024 * 1024)).toFixed(2)
+        + " GB"
+    );
+
+}
+
+
+// ============================================================
+// SHOW MESSAGE
+// ============================================================
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.style.display =
+        "block";
+
+
+    message.className =
+        "message " +
+        (
+            type === "success"
+                ? "success-message"
+                : "error-message"
+        );
+
+
+    message.innerHTML =
+        text;
+
+}
+
+
+// ============================================================
+// FILE SELECTION
+// ============================================================
+
+projectInput.addEventListener(
+    "change",
+    function () {
+
+        const files =
+            Array.from(
+                projectInput.files
+            );
+
+
+        if (!files.length) {
+
+            fileInfo.textContent =
+                "No folder selected.";
+
+            return;
+
+        }
+
+
+        const validFiles =
+            files.filter(
+                file =>
+                    !shouldIgnoreFile(file)
+            );
+
+
+        const skippedFiles =
+            files.length -
+            validFiles.length;
+
+
+        const totalSize =
+            validFiles.reduce(
+                (
+                    total,
+                    file
+                ) =>
+                    total + file.size,
+                0
+            );
+
+
+        fileInfo.innerHTML =
+
+            `<strong>${validFiles.length}</strong>`
+            + ` files selected`
+            + `<br>`
+            + `Total size: `
+            + `<strong>${formatSize(totalSize)}</strong>`
+            + `<br>`
+            + `${skippedFiles} files/folders will be ignored`;
+
+    }
+);
+
+
+// ============================================================
+// UPLOAD BATCH
+// ============================================================
+
+async function uploadBatch(
+    batch
+) {
+
+    const formData =
+        new FormData();
+
+
+    for (
+        const file of batch
+    ) {
+
+        const path =
+            file.webkitRelativePath ||
+            file.name;
+
+
+        formData.append(
+            "project_files",
+            file,
+            path
+        );
+
+    }
+
+
+    const response =
+        await fetch(
+            "/upload-batch",
+            {
+
+                method:
+                    "POST",
+
+                body:
+                    formData
+
+            }
+        );
+
+
+    let data;
+
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch (error) {
+
+        throw new Error(
+            "Server returned an invalid response."
+        );
+
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.error ||
+            "Batch upload failed."
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+// ============================================================
+// PUBLISH PROJECT
+// ============================================================
+
+async function publishProject() {
+
+    const repoName =
+        document.getElementById(
+            "repo_name"
+        ).value.trim();
+
+
+    const description =
+        document.getElementById(
+            "description"
+        ).value.trim();
+
+
+    const files =
+        Array.from(
+            projectInput.files
+        );
+
+
+    // --------------------------------------------------------
+    // VALIDATION
+    // --------------------------------------------------------
+
+    if (!repoName) {
+
+        showMessage(
+            "Please enter a repository name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!files.length) {
+
+        showMessage(
+            "Please select a project folder.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // FILTER FILES
+    // --------------------------------------------------------
+
+    const validFiles =
+        files.filter(
+            file =>
+                !shouldIgnoreFile(file)
+        );
+
+
+    if (!validFiles.length) {
+
+        showMessage(
+            "No valid project files were found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // TOTAL SIZE
+    // --------------------------------------------------------
+
+    const totalSize =
+        validFiles.reduce(
+            (
+                total,
+                file
+            ) =>
+                total + file.size,
+            0
+        );
+
+
+    // --------------------------------------------------------
+    // 2 GB CHECK
+    // --------------------------------------------------------
+
+    const maxProjectSize =
+        2 *
+        1024 *
+        1024 *
+        1024;
+
+
+    if (
+        totalSize >
+        maxProjectSize
+    ) {
+
+        showMessage(
+
+            "The selected project is larger than "
+            + "<strong>2 GB</strong>."
+            + "<br><br>"
+            + "Remove unnecessary files such as "
+            + "datasets, node_modules, build files, "
+            + "or other large files.",
+
+            "error"
+
+        );
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // CHECK INDIVIDUAL FILES
+    // --------------------------------------------------------
+
+    const maxFileSize =
+        100 *
+        1024 *
+        1024;
+
+
+    const tooLargeFiles =
+        validFiles.filter(
+            file =>
+                file.size >
+                maxFileSize
+        );
+
+
+    // --------------------------------------------------------
+    // DISABLE BUTTON
+    // --------------------------------------------------------
+
+    publishButton.disabled =
+        true;
+
+
+    projectInput.disabled =
+        true;
+
+
+    progressContainer.style.display =
+        "block";
+
+
+    message.style.display =
+        "none";
+
+
+    // --------------------------------------------------------
+    // UPLOAD FILES IN BATCHES
+    // --------------------------------------------------------
+
+    let batch = [];
+
+    let batchSize = 0;
+
+    let processedFiles = 0;
+
+    let uploadedFiles = 0;
+
+    let skippedFiles = 0;
+
+    let largeFiles = 0;
+
+
+    try {
+
+        for (
+            let i = 0;
+            i < validFiles.length;
+            i++
+        ) {
+
+            const file =
+                validFiles[i];
+
+
+            // ------------------------------------------------
+            // Skip files over 100 MB
+            // ------------------------------------------------
+
+            if (
+                file.size >
+                maxFileSize
+            ) {
+
+                largeFiles++;
+
+                processedFiles++;
+
+                continue;
+
+            }
+
+
+            // ------------------------------------------------
+            // If adding this file would make the batch
+            // larger than 20 MB, send the current batch.
+            // ------------------------------------------------
+
+            if (
+
+                batch.length > 0
+
+                &&
+
+                batchSize + file.size
+                > BATCH_SIZE
+
+            ) {
+
+                progressStatus.textContent =
+                    `Uploading ${processedFiles} / ${validFiles.length} files`;
+
+
+                await uploadBatch(
+                    batch
+                );
+
+
+                uploadedFiles +=
+                    batch.length;
+
+
+                batch = [];
+
+                batchSize = 0;
+
+            }
+
+
+            batch.push(
+                file
+            );
+
+
+            batchSize +=
+                file.size;
+
+
+            processedFiles++;
+
+
+            const percent =
+                Math.round(
+                    (
+                        processedFiles /
+                        validFiles.length
+                    ) *
+                    100
+                );
+
+
+            progressPercent.textContent =
+                `${percent}%`;
+
+
+            progressFill.style.width =
+                `${percent}%`;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Upload final batch
+        // ----------------------------------------------------
+
+        if (
+            batch.length > 0
+        ) {
+
+            progressStatus.textContent =
+                `Uploading ${processedFiles} / ${validFiles.length} files`;
+
+
+            await uploadBatch(
+                batch
+            );
+
+
+            uploadedFiles +=
+                batch.length;
+
+        }
+
+
+        // ----------------------------------------------------
+        // PUBLISH
+        // ----------------------------------------------------
+
+        progressStatus.textContent =
+            "All files received. Creating GitHub repository...";
+
+
+        progressPercent.textContent =
+            "100%";
+
+
+        progressFill.style.width =
+            "100%";
+
+
+        const publishData =
+            new FormData();
+
+
+        publishData.append(
+            "repo_name",
+            repoName
+        );
+
+
+        publishData.append(
+            "description",
+            description
+        );
+
+
+        const response =
+            await fetch(
+                "/publish",
+                {
+
+                    method:
+                        "POST",
+
+                    body:
+                        publishData
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Publishing failed."
+            );
+
+        }
+
+
+        // ----------------------------------------------------
+        // SUCCESS
+        // ----------------------------------------------------
+
+        progressStatus.textContent =
+            "Project published successfully!";
+
+
+        progressPercent.textContent =
+            "100%";
+
+
+        showMessage(
+
+            "🎉 <strong>Project Published Successfully!</strong>"
+            + "<br><br>"
+            + `Files processed: ${validFiles.length}`
+            + "<br>"
+            + `Files over 100 MB skipped: ${largeFiles}`
+            + "<br><br>"
+            + `<a href="${data.repository}" `
+            + `target="_blank" `
+            + `style="color:#86efac;">`
+            + "🔗 Open GitHub Repository"
+            + "</a>",
+
+            "success"
+
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showMessage(
+
+            "❌ <strong>Upload failed</strong>"
+            + "<br><br>"
+            + error.message,
+
+            "error"
+
+        );
+
+
+        progressStatus.textContent =
+            "Upload failed.";
+
+    } finally {
+
+        publishButton.disabled =
+            false;
+
+
+        projectInput.disabled =
+            false;
+
+    }
+
+}
+
+
+// ============================================================
+// FORM SUBMIT
+// ============================================================
+
+form.addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+        publishProject();
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
